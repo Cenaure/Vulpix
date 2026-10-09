@@ -1,28 +1,50 @@
+import com.diffplug.spotless.LineEnding
+
 plugins {
-    id 'java'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
-    id("io.freefair.lombok") version "9.8.0"
-    // + dagger for DI
+	id 'java'
+	id 'org.openjfx.javafxplugin' version '0.1.0'
+	id("io.freefair.lombok") version "9.8.0"
+
+	// Code formating
+	id("com.diffplug.spotless") version "8.10.4"
+
+	// + dagger for DI
 }
 
 group = 'sk.upjs.ics'
 version = '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
+}
+
+//from https://github.com/diffplug/spotless/tree/main/plugin-gradle#quickstart
+spotless {
+	lineEndings = LineEnding.UNIX
+	format 'misc', {
+		target '*.gradle', '.gitattributes', '.gitignore'
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	java {
+		importOrder()
+		googleJavaFormat().reflowLongStrings().skipJavadocFormatting()
+		formatAnnotations()
+		removeUnusedImports()
+	}
 }
 
 javafx {
-    version = "27"
-    modules = [ 'javafx.controls' ]
+	version = "27"
+	modules = [ 'javafx.controls' ]
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:6.0.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation platform('org.junit:junit-bom:6.0.0')
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
