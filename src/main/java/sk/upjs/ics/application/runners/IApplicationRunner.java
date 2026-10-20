@@ -5,8 +5,10 @@ import java.nio.file.Path;
 import java.util.function.Consumer;
 
 public interface IApplicationRunner {
-    RunnerKind kind();
-    RunnerSpecifications _specifications = null;
+  RunnerKind kind();
 
-    void run(Path applicationPath, Consumer<String> logConsumer) throws RunnerException, IOException, InterruptedException;
+  RunnerSpecifications _specifications = null;
+
+  void run(Path applicationPath, Consumer<String> logConsumer)
+      throws RunnerException, IOException, InterruptedException;
 }

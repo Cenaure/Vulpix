@@ -4,12 +4,15 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class WindowsApplicationRunner /*implements IApplicationRunner*/ {
-    private final RunnerSpecifications _specifications;
+  private final RunnerSpecifications _specifications;
 
-    public final RunnerKind kind() { return RunnerKind.WINDOWS_NATIVE; };
+  public final RunnerKind kind() {
+    return RunnerKind.WINDOWS_NATIVE;
+  }
+  ;
 
-    //@Override
-    public void run() {
-        // implement this
-    }
+  // @Override
+  public void run() {
+    // implement this
+  }
 }
