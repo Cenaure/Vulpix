@@ -1,1 +1,5 @@
+// Documentation that were used to create gradle monorepo project
+// https://docs.gradle.org/current/userguide/multi_project_builds.html
+
 rootProject.name = 'vulpix'
+include "vulpix-app", "vulpix-server", "vulpix-shared"

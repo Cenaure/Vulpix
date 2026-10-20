@@ -1,0 +1,48 @@
+import com.diffplug.spotless.LineEnding
+
+plugins {
+    id 'java'
+
+    // Code formating
+    id "com.diffplug.spotless"
+
+}
+
+group = 'sk.upjs.ics'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+//from https://github.com/diffplug/spotless/tree/main/plugin-gradle#quickstart
+spotless {
+    lineEndings = LineEnding.UNIX
+    format 'misc', {
+        target '*.gradle', '.gitattributes', '.gitignore'
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    java {
+        importOrder()
+        googleJavaFormat().reflowLongStrings().skipJavadocFormatting()
+        formatAnnotations()
+        removeUnusedImports()
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:6.0.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
