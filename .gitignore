@@ -39,6 +39,5 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-
-.env*
-!.env*example
+.env
+!.env*.example
