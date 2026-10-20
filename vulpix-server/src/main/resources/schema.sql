@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users
 
     avatar_img              UUID,         -- file name
 
-    current_play_session_id UUID REFERENCES play_sessions (id),
+    -- current_play_session_id UUID REFERENCES play_sessions (id),
 
     created_at              TIMESTAMPTZ  NOT NULL DEFAULT now(),
     deactivated_at          TIMESTAMPTZ  NULL,
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS play_sessions
     finished_at    TIMESTAMPTZ
         CHECK ( finished_at IS NULL OR finished_at >= started_at )
 );
-
+ALTER TABLE users ADD COLUMN IF NOT EXISTS current_play_session_id UUID REFERENCES play_sessions(id);
 
 CREATE TABLE IF NOT EXISTS friendships
 (
