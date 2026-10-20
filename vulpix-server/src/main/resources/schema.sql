@@ -1,31 +1,33 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    id                      UUID PRIMARY KEY      DEFAULT gen_random_uuid(),
-    username                VARCHAR(30)  NOT NULL,
-    email                   VARCHAR(255) NOT NULL UNIQUE,
-    password_hash           VARCHAR(255), -- I guess it can be null if we will have Google oauth
+    id             UUID PRIMARY KEY      DEFAULT gen_random_uuid(),
+    username       VARCHAR(30)  NOT NULL,
+    email          VARCHAR(255) NOT NULL UNIQUE,
+    password_hash  VARCHAR(255), -- I guess it can be null if we will have Google oauth
 
-    avatar_img              UUID,         -- file name
+    avatar_img     UUID,         -- file name
 
     -- current_play_session_id UUID REFERENCES play_sessions (id),
 
-    created_at              TIMESTAMPTZ  NOT NULL DEFAULT now(),
-    deactivated_at          TIMESTAMPTZ  NULL,
-    last_login_at           TIMESTAMPTZ
+    created_at     TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    deactivated_at TIMESTAMPTZ  NULL,
+    last_login_at  TIMESTAMPTZ
 );
 
 
 CREATE TABLE IF NOT EXISTS sessions
 (
-    id            UUID PRIMARY KEY      DEFAULT gen_random_uuid(),
-    user_id       UUID         NOT NULL REFERENCES users (id),
-    refresh_token VARCHAR(255) NOT NULL UNIQUE,
-    device_info   VARCHAR      NOT NULL,
+    id                 UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
+    user_id            UUID        NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    refresh_token_hash VARCHAR(64) NOT NULL UNIQUE,
+    device_info        VARCHAR     NOT NULL,
 
-    created_at    TIMESTAMPTZ  NOT NULL DEFAULT now(),
-    expires_at    TIMESTAMPTZ  NOT NULL,
-    revoked_at    TIMESTAMPTZ
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now(),
+    expires_at         TIMESTAMPTZ NOT NULL,
+    revoked_at         TIMESTAMPTZ,
+    CHECK ( expires_at >= created_at )
 );
+CREATE INDEX IF NOT EXISTS index_sessions_user_id ON sessions (user_id);
 
 
 CREATE TABLE IF NOT EXISTS applications
@@ -89,7 +91,8 @@ CREATE TABLE IF NOT EXISTS play_sessions
     finished_at    TIMESTAMPTZ
         CHECK ( finished_at IS NULL OR finished_at >= started_at )
 );
-ALTER TABLE users ADD COLUMN IF NOT EXISTS current_play_session_id UUID REFERENCES play_sessions(id);
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS current_play_session_id UUID REFERENCES play_sessions (id);
 
 CREATE TABLE IF NOT EXISTS friendships
 (
