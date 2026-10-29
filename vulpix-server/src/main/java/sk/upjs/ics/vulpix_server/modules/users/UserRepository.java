@@ -1,10 +1,11 @@
 package sk.upjs.ics.vulpix_server.modules.users;
 
-import static sk.upjs.ics.vulpix_server.common.MapperHelpers.mapToInstant;
+import static sk.upjs.ics.vulpix_server.common.utils.MapperHelpers.mapToInstant;
 
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.container.ContainerImageMetadata;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -66,6 +67,18 @@ public class UserRepository {
         .optional();
   }
 
+  public Optional<User>  findByUsername(String username) {
+    return jdbc.sql(
+            """
+            SELECT id, username, email, password_hash, avatar_img, created_at, deactivated_at, last_login_at, last_seen_at
+            FROM users
+            WHERE username = :username AND deactivated_at IS NULL
+            """)
+        .param("username", username)
+        .query(mapper)
+        .optional();
+  }
+
   public Optional<User> deactivate(UUID id) {
     return jdbc.sql(
             """
@@ -87,7 +100,7 @@ public class UserRepository {
             WHERE id = :id AND deactivated_at IS NULL
             """)
         .param("id", id)
-        .query(mapper);
+        .update();
   }
 
   public Optional<User> updateAvatar(UUID id, UUID newAvatarUUID) {

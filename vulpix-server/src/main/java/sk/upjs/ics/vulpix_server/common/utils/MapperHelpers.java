@@ -1,4 +1,4 @@
-package sk.upjs.ics.vulpix_server.common;
+package sk.upjs.ics.vulpix_server.common.utils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

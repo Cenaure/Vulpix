@@ -1,4 +1,4 @@
-package sk.upjs.ics.vulpix_server.common;
+package sk.upjs.ics.vulpix_server.common.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;

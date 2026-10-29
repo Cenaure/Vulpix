@@ -13,35 +13,39 @@ import java.util.HexFormat;
 import java.util.Optional;
 import java.util.UUID;
 import javax.crypto.SecretKey;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import sk.upjs.ics.dto.auth.TokenPair;
 import sk.upjs.ics.exceptions.ApiExceptionCodes;
-import sk.upjs.ics.vulpix_server.common.HashingUtils;
 import sk.upjs.ics.vulpix_server.common.exceptions.UnauthorizedException;
-import sk.upjs.ics.vulpix_server.modules.auth.tokens.AccessTokenClaims;
 import sk.upjs.ics.vulpix_server.modules.auth.tokens.RefreshTokenClaims;
 import sk.upjs.ics.vulpix_server.modules.users.User;
 
 // https://github.com/jwtk/jjwt#creating-a-jwt
 @Service
-@RequiredArgsConstructor
 public class SessionService {
-  @Value("${jwt.access-secret}")
-  private String accessSecret;
-
-  @Value("${jwt.refresh-secret}")
-  private String refreshSecret;
-
   @Value("${jwt.access-ttl-minutes}")
   private long accessTTLMinutes;
 
   @Value("${jwt.refresh-ttl-days}")
   private long refreshTTLDays;
 
-  private final HashingUtils hashingUtils;
+  @Value("${jwt.issuer}")
+  private String jwtIssuer;
+
   private final SessionRepository sessionRepository;
+
+  private final SecretKey accessKey;
+  private final SecretKey refreshKey;
+
+  public SessionService(
+      SessionRepository sessionRepository,
+      @Value("${jwt.access-secret}") String accessSecret,
+      @Value("${jwt.refresh-secret}") String refreshSecret) {
+    this.sessionRepository = sessionRepository;
+    this.accessKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(accessSecret));
+    this.refreshKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(refreshSecret));
+  }
 
   public TokenPair generateAndSaveTokens(
       User user, boolean newSession, Optional<UUID> existingSessionId, String deviceInfo) {
@@ -50,13 +54,11 @@ public class SessionService {
 
     Instant now = Instant.now();
 
-    SecretKey accessKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(accessSecret));
-
     String accessJwt =
         Jwts.builder()
-            .issuer("vulpix")
+            .issuer(jwtIssuer)
             .subject(user.id().toString())
-            .claim("sessionId", sessionId)
+            .claim("sessionId", sessionId.toString())
             .claim("username", user.username())
             .claim("email", user.email())
             .issuedAt(Date.from(now))
@@ -64,13 +66,11 @@ public class SessionService {
             .signWith(accessKey, Jwts.SIG.HS256)
             .compact();
 
-    SecretKey refreshKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(refreshSecret));
-
     String refreshJwt =
         Jwts.builder()
-            .issuer("vulpix")
+            .issuer(jwtIssuer)
             .subject(user.id().toString())
-            .claim("sessionId", sessionId)
+            .claim("sessionId", sessionId.toString())
             .issuedAt(Date.from(now))
             .expiration(Date.from(now.plus(refreshTTLDays, ChronoUnit.DAYS)))
             .signWith(refreshKey, Jwts.SIG.HS256)
@@ -88,28 +88,32 @@ public class SessionService {
 
   // region: # Validate tokens
   public RefreshTokenClaims validateRefreshToken(String refreshToken) throws JwtException {
-    SecretKey refreshKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(refreshSecret));
-
     Jwt<JwsHeader, Claims> res =
-        Jwts.parser().verifyWith(refreshKey).build().parseSignedClaims(refreshToken);
+        Jwts.parser()
+            .verifyWith(refreshKey)
+            .requireIssuer(jwtIssuer)
+            .build()
+            .parseSignedClaims(refreshToken);
 
     return new RefreshTokenClaims(
         UUID.fromString((String) res.getPayload().get("sessionId")),
         UUID.fromString(res.getPayload().getSubject()));
   }
 
-  public AccessTokenClaims validateAccessToken(String accessToken) throws JwtException {
-    SecretKey accessKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(accessSecret));
-
-    Jwt<JwsHeader, Claims> res =
-        Jwts.parser().verifyWith(accessKey).build().parseSignedClaims(accessToken);
-
-    return new AccessTokenClaims(
-        UUID.fromString((String) res.getPayload().get("sessionId")),
-        UUID.fromString(res.getPayload().getSubject()),
-        (String) res.getPayload().get("username"),
-        (String) res.getPayload().get("email"));
-  }
+  //  public AccessTokenClaims validateAccessToken(String accessToken) throws JwtException {
+  //    Jwt<JwsHeader, Claims> res =
+  //        Jwts.parser()
+  //            .verifyWith(accessKey)
+  //            .requireIssuer(jwtIssuer)
+  //            .build()
+  //            .parseSignedClaims(accessToken);
+  //
+  //    return new AccessTokenClaims(
+  //        UUID.fromString((String) res.getPayload().get("sessionId")),
+  //        UUID.fromString(res.getPayload().getSubject()),
+  //        (String) res.getPayload().get("username"),
+  //        (String) res.getPayload().get("email"));
+  //  }
 
   // endregion: # Validate tokens
 

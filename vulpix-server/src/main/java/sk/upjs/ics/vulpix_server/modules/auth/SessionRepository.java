@@ -1,6 +1,6 @@
 package sk.upjs.ics.vulpix_server.modules.auth;
 
-import static sk.upjs.ics.vulpix_server.common.MapperHelpers.mapToInstant;
+import static sk.upjs.ics.vulpix_server.common.utils.MapperHelpers.mapToInstant;
 
 import java.time.Instant;
 import java.time.ZoneOffset;

@@ -5,9 +5,9 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sk.upjs.ics.exceptions.ApiExceptionCodes;
-import sk.upjs.ics.vulpix_server.common.HashingUtils;
 import sk.upjs.ics.vulpix_server.common.exceptions.ConflictException;
 import sk.upjs.ics.vulpix_server.common.exceptions.NotFoundException;
+import sk.upjs.ics.vulpix_server.common.utils.HashingUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +18,9 @@ public class UserService {
   public User create(String username, String email, String password, UUID avatarImg) {
     boolean emailTaken = this.userRepository.findByEmail(email).isPresent();
     if (emailTaken) throw new ConflictException(ApiExceptionCodes.EMAIL_TAKEN);
+
+    boolean usernameTaken = this.userRepository.findByUsername(username).isPresent();
+    if (usernameTaken) throw new ConflictException(ApiExceptionCodes.USERNAME_TAKEN);
 
     String passwordHash = this.hashingUtils.encode(password);
     return this.userRepository.create(username, email, passwordHash, avatarImg);
