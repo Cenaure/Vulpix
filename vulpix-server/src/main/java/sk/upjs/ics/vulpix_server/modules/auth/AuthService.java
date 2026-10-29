@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import sk.upjs.ics.dto.auth.TokenPair;
 import sk.upjs.ics.exceptions.ApiExceptionCodes;
 import sk.upjs.ics.vulpix_server.common.exceptions.BadRequestException;
+import sk.upjs.ics.vulpix_server.common.exceptions.ForbiddenException;
 import sk.upjs.ics.vulpix_server.common.exceptions.NotFoundException;
 import sk.upjs.ics.vulpix_server.common.exceptions.UnauthorizedException;
 import sk.upjs.ics.vulpix_server.common.utils.HashingUtils;
@@ -64,13 +65,19 @@ public class AuthService {
     }
   }
 
-  public void logout(String refreshToken) {
-    String hash = this.sessionService.sha256(refreshToken);
-    Session session =
-        this.sessionService
-            .findByRefreshTokenHash(hash)
-            .orElseThrow(() -> new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED));
-    this.sessionService.deleteSession(session.id());
+  public Session logout(UUID sessionId, UUID userId) {
+    Session session = this.sessionService.findBySessionId(sessionId).orElseThrow(
+        () -> new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED)
+    );
+
+    if (session.userId() != userId)
+      throw new ForbiddenException(ApiExceptionCodes.FORBIDDEN);
+
+    return this.sessionService.revokeSession(sessionId);
+  }
+
+  public void revokeAllUserSessions(UUID userId) {
+    this.sessionService.revokeAllSessions(userId);
   }
 
   public User getMe(UUID id) {

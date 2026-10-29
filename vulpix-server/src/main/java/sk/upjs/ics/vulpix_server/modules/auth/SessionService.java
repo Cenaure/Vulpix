@@ -136,8 +136,18 @@ public class SessionService {
     return this.sessionRepository.findByRefreshTokenHash(hash);
   }
 
-  public Number deleteSession(UUID id) {
-    return this.sessionRepository.delete(id);
+  public Optional<Session> findBySessionId(UUID sessionId) {
+    return this.findBySessionId(sessionId);
+  }
+
+  public Session revokeSession(UUID id) {
+    return this.sessionRepository.revoke(id).orElseThrow(
+        () -> new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED)
+    );
+  }
+
+  public void revokeAllSessions(UUID userId) {
+    this.sessionRepository.revokeAllUserSessions(userId);
   }
 
   // endregion: # Session Entity

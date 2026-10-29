@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -28,17 +29,28 @@ public class AuthController {
     return this.authService.signUp(dto.username(), dto.email(), dto.password(), dto.deviceInfo());
   }
 
-  //
-  //    @PostMapping("/logout")
-  //    public void logout() {
-  //        return;
-  //    }
-  //
-  //    @PostMapping("/refresh")
-  //    public TokenPair refresh() {
-  //        return "todo";
-  //    }
-  //
+  @PostMapping("/logout")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void logout(@AuthenticationPrincipal Jwt jwt) {
+      UUID sessionId = UUID.fromString(jwt.getClaims().get("sessionId").toString());
+      UUID userId = UUID.fromString(jwt.getSubject());
+      this.authService.logout(sessionId, userId);
+  }
+
+  @PostMapping("/revoke-all-sessions")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void revokeAllUserSessions(
+      @AuthenticationPrincipal Jwt jwt
+  ) {
+    UUID userId = UUID.fromString(jwt.getSubject());
+    this.authService.revokeAllUserSessions(userId);
+  }
+
+//  @PostMapping("/refresh")
+//  public TokenPair refresh() {
+//      return "todo";
+//  }
+
   @GetMapping("/me")
   public User me(@AuthenticationPrincipal Jwt jwt) {
     UUID userId = UUID.fromString(jwt.getSubject());

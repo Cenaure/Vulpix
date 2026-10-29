@@ -96,6 +96,17 @@ public class SessionRepository {
         .optional();
   }
 
+  public void revokeAllUserSessions(UUID userId) {
+    jdbc.sql(
+            """
+            UPDATE sessions
+            SET revoked_at = now()
+            WHERE user_id = :user_id AND revoked_at IS NULL
+            """)
+        .param("user_id", userId)
+        .update();
+  }
+
   // TODO schedule deleting every day ??
   public Number deleteExpired() {
     return jdbc.sql(
@@ -104,18 +115,6 @@ public class SessionRepository {
                 DELETE FROM sessions WHERE expires_at < now() RETURNING *
             ) SELECT count(*) FROM deleted
             """)
-        .query(Number.class)
-        .single();
-  }
-
-  public Number delete(UUID id) {
-    return jdbc.sql(
-            """
-            WITH deleted AS (
-                DELETE FROM sessions WHERE id = :id RETURNING *
-            ) SELECT count(*) FROM deleted
-            """)
-        .param("id", id)
         .query(Number.class)
         .single();
   }
