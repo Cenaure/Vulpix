@@ -19,7 +19,7 @@ erDiagram
     sessions {
         UUID id PK
         UUID user_id FK "NOT NULL"
-        TEXT refresh_token_sha256 UK "NOT NULL"
+        TEXT refresh_token_hash UK "NOT NULL"
         TEXT device_info "NOT NULL"
         TIMESTAMPTZ created_at "NOT NULL, DEFAULT now()"
         TIMESTAMPTZ expires_at "NOT NULL"
