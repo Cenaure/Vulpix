@@ -66,12 +66,12 @@ public class AuthService {
   }
 
   public Session logout(UUID sessionId, UUID userId) {
-    Session session = this.sessionService.findBySessionId(sessionId).orElseThrow(
-        () -> new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED)
-    );
+    Session session =
+        this.sessionService
+            .findBySessionId(sessionId)
+            .orElseThrow(() -> new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED));
 
-    if (session.userId() != userId)
-      throw new ForbiddenException(ApiExceptionCodes.FORBIDDEN);
+    if (session.userId() != userId) throw new ForbiddenException(ApiExceptionCodes.FORBIDDEN);
 
     return this.sessionService.revokeSession(sessionId);
   }

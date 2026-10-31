@@ -1,7 +1,6 @@
 package sk.upjs.ics.vulpix_server.modules.auth;
 
 import jakarta.validation.Valid;
-import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,24 +31,22 @@ public class AuthController {
   @PostMapping("/logout")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void logout(@AuthenticationPrincipal Jwt jwt) {
-      UUID sessionId = UUID.fromString(jwt.getClaims().get("sessionId").toString());
-      UUID userId = UUID.fromString(jwt.getSubject());
-      this.authService.logout(sessionId, userId);
+    UUID sessionId = UUID.fromString(jwt.getClaims().get("sessionId").toString());
+    UUID userId = UUID.fromString(jwt.getSubject());
+    this.authService.logout(sessionId, userId);
   }
 
   @PostMapping("/revoke-all-sessions")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void revokeAllUserSessions(
-      @AuthenticationPrincipal Jwt jwt
-  ) {
+  public void revokeAllUserSessions(@AuthenticationPrincipal Jwt jwt) {
     UUID userId = UUID.fromString(jwt.getSubject());
     this.authService.revokeAllUserSessions(userId);
   }
 
-//  @PostMapping("/refresh")
-//  public TokenPair refresh() {
-//      return "todo";
-//  }
+  //  @PostMapping("/refresh")
+  //  public TokenPair refresh() {
+  //      return "todo";
+  //  }
 
   @GetMapping("/me")
   public User me(@AuthenticationPrincipal Jwt jwt) {

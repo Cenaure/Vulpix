@@ -5,7 +5,6 @@ import static sk.upjs.ics.vulpix_server.common.utils.MapperHelpers.mapToInstant;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.container.ContainerImageMetadata;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
@@ -67,7 +66,7 @@ public class UserRepository {
         .optional();
   }
 
-  public Optional<User>  findByUsername(String username) {
+  public Optional<User> findByUsername(String username) {
     return jdbc.sql(
             """
             SELECT id, username, email, password_hash, avatar_img, created_at, deactivated_at, last_login_at, last_seen_at

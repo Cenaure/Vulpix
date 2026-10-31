@@ -18,20 +18,15 @@ public class SecurityConfig {
     return http.csrf(AbstractHttpConfigurer::disable) // csrf -> csrf.disable()
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers(
-                "/auth/sign-up",
-                "/auth/sign-in",
-                "/auth/refresh"
-            ).permitAll()
-
-            .anyRequest().authenticated()
-        )
+        .authorizeHttpRequests(
+            auth ->
+                auth.requestMatchers("/auth/sign-up", "/auth/sign-in", "/auth/refresh")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
         .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-
         .httpBasic(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
-
         .build();
   }
 }

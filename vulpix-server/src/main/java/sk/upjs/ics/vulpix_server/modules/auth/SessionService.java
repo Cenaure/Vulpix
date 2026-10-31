@@ -141,9 +141,9 @@ public class SessionService {
   }
 
   public Session revokeSession(UUID id) {
-    return this.sessionRepository.revoke(id).orElseThrow(
-        () -> new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED)
-    );
+    return this.sessionRepository
+        .revoke(id)
+        .orElseThrow(() -> new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED));
   }
 
   public void revokeAllSessions(UUID userId) {
