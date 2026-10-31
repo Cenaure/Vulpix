@@ -10,6 +10,10 @@ dependencies {
 }
 
 javafx {
-    version = "27"
-    modules = [ 'javafx.controls' ]
+    version = '21.0.5'
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
+application {
+    mainClass = 'sk.upjs.ics.Main'
 }

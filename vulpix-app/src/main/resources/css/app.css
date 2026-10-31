@@ -1,0 +1,116 @@
+/* dark theme */
+.root {
+    -bg:            #16171b;
+    -surface:       #1f2127;
+    -surface-hover: #272a32;
+    -border:        #343842;
+    -text:          #e8eaed;
+    -text-muted:    #9aa0ab;
+    -accent:        #7c5cff;
+    -accent-hover:  #9378ff;
+    -accent-press:  #6446e6;
+    -danger:        #ff6b6b;
+
+    -fx-background-color: -bg;
+    -fx-font-family: "Segoe UI", "Noto Sans", "DejaVu Sans", sans-serif;
+    -fx-font-size: 14px;
+    -fx-text-fill: -text;
+}
+/* light  theme */
+.root.light {
+    -bg:            #f4f5f7;
+    -surface:       #ffffff;
+    -surface-hover: #eceef2;
+    -border:        #d5d8df;
+    -text:          #1b1d22;
+    -text-muted:    #6a707c;
+    -accent:        #6a49f0;
+    -accent-hover:  #7d5ef5;
+    -accent-press:  #5636d6;
+    -danger:        #d63b3b;
+}
+/* Text  */
+.label {
+    -fx-text-fill: -text;
+}
+
+.title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.muted {
+    -fx-text-fill: -text-muted;
+}
+
+.error {
+    -fx-text-fill: -danger;
+}
+
+/* Login */
+.auth-card {
+}
+/* nputs */
+.text-field,
+.password-field {
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: -accent;
+}
+
+/* Buttons */
+.button {
+}
+
+.button:hover {
+}
+
+.button:pressed {
+}
+
+.button:disabled {
+}
+
+.button:focused {
+}
+
+.button.secondary {
+
+}
+
+.button.secondary:hover {
+}
+
+.hyperlink {
+}
+
+.hyperlink:hover {
+
+}
+
+.hyperlink:visited {
+}
+
+.hyperlink:focused {
+}
+
+.progress-indicator {
+}
+
+/* Main window */
+.sidebar {
+}
+
+.game-card {
+}
+
+.game-card:hover {
+}
+
+.list-view,
+.table-view,
+.tree-view {
+
+}

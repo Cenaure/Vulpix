@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sk.upjs.ics.application.controllers.MainController" prefWidth="1100" prefHeight="700">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220" spacing="8">
+            <Label text="%app.name" styleClass="title"/>
+            <Button fx:id="allGamesButton" text="%main.allGames" maxWidth="Infinity" onAction="#onShowAll"/>
+            <Label text="%main.collections" styleClass="muted"/>
+            <ListView fx:id="collectionsList" VBox.vgrow="ALWAYS"/>
+            <Separator/>
+            <Label fx:id="userLabel"/>
+            <Button text="%main.logout" styleClass="secondary" maxWidth="Infinity" onAction="#onLogout"/>
+        </VBox>
+    </left>
+
+    <top>
+        <HBox styleClass="toolbar" spacing="12" alignment="CENTER_LEFT">
+            <TextField fx:id="searchField" promptText="%main.search" HBox.hgrow="ALWAYS"/>
+            <Button text="%main.addGame" onAction="#onAddGame"/>
+        </HBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <ScrollPane fitToWidth="true" styleClass="games-scroll">
+                <FlowPane fx:id="gamesPane" styleClass="games-pane" hgap="16" vgap="16"/>
+            </ScrollPane>
+            <Label fx:id="emptyLabel" text="%main.empty" styleClass="muted" visible="false" mouseTransparent="true"/>
+        </StackPane>
+    </center>
+
+    <right>
+        <VBox fx:id="detailPane" styleClass="detail-pane" prefWidth="280" spacing="10"
+              visible="false" managed="false">
+            <Label fx:id="detailName" styleClass="title" wrapText="true"/>
+            <Label fx:id="detailPlayed" styleClass="muted"/>
+            <Label fx:id="detailAdded" styleClass="muted"/>
+            <Button fx:id="playButton" text="%main.play" maxWidth="Infinity" onAction="#onPlay"/>
+        </VBox>
+    </right>
+</BorderPane>
