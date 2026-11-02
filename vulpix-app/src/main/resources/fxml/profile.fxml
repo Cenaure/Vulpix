@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="sk.upjs.ics.controllers.ProfileController"
+      styleClass="dialog-root" spacing="16" prefWidth="520">
+
+    <HBox spacing="16" alignment="CENTER_LEFT">
+        <StackPane styleClass="avatar" minWidth="72" minHeight="72" prefWidth="72" prefHeight="72">
+            <!--TODO: figure out avatars -->
+            <Label fx:id="avatarLetter" styleClass="avatar-letter"/>
+        </StackPane>
+        <VBox spacing="2">
+            <Label fx:id="usernameLabel" styleClass="title"/>
+            <Label fx:id="emailLabel" styleClass="muted"/>
+        </VBox>
+    </HBox>
+
+    <GridPane hgap="16" vgap="6">
+        <columnConstraints>
+            <ColumnConstraints minWidth="140"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <Label text="%profile.memberSince" styleClass="muted" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="memberSinceLabel" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Label text="%profile.lastLogin" styleClass="muted" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <Label fx:id="lastLoginLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox spacing="12">
+        <VBox styleClass="stat-box" HBox.hgrow="ALWAYS">
+            <Label fx:id="gamesCountLabel" styleClass="stat-value"/>
+            <Label text="%profile.games" styleClass="muted"/>
+        </VBox>
+        <VBox styleClass="stat-box" HBox.hgrow="ALWAYS">
+            <Label fx:id="playtimeLabel" styleClass="stat-value"/>
+            <Label text="%profile.playtime" styleClass="muted"/>
+        </VBox>
+        <VBox styleClass="stat-box" HBox.hgrow="ALWAYS">
+            <Label fx:id="collectionsCountLabel" styleClass="stat-value"/>
+            <Label text="%profile.collections" styleClass="muted"/>
+        </VBox>
+    </HBox>
+
+    <Label text="%profile.topGames" styleClass="muted"/>
+    <ListView fx:id="topGamesList" prefHeight="170"/>
+
+    <HBox alignment="CENTER_RIGHT">
+        <Button text="%profile.close" onAction="#onClose"/>
+    </HBox>
+</VBox>

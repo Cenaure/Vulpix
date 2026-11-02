@@ -1,4 +1,4 @@
-package sk.upjs.ics.application.controllers;
+package sk.upjs.ics.controllers;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -15,9 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import sk.upjs.ics.AppContext;
 import sk.upjs.ics.entities.ApplicationEntity;
 import sk.upjs.ics.entities.CollectionEntity;
+import sk.upjs.ics.util.AppContext;
 
 public class MainController {
   private final AppContext appContext;
@@ -44,24 +44,23 @@ public class MainController {
 
   @FXML
   private void initialize() {
-    userLabel.setText(appContext.currentUser().username());
+    var user = appContext.currentUser();
 
-    collectionsList
-        .getItems()
-        .setAll(appContext.collectionDao().getAllByUser(appContext.currentUser().id()));
+    userLabel.setText(user.username());
+    collectionsList.getItems().setAll(appContext.collectionDao().getAllByUser(user.id()));
 
     collectionsList
         .getSelectionModel()
         .selectedItemProperty()
         .addListener(
-            (obs, oldCollection, newCollection) -> {
-              if (newCollection != null) {
-                selectedCollection = newCollection;
-                loadApplications();
-              }
+            (obs, oldVal, newVal) -> {
+              if (newVal == null) return;
+              selectedCollection = newVal;
+              loadApplications();
             });
 
-    searchField.textProperty().addListener((obs, oldText, newText) -> refresh());
+    searchField.textProperty().addListener((obs, oldVal, newVal) -> refresh());
+
     loadApplications();
   }
 
@@ -76,41 +75,41 @@ public class MainController {
   }
 
   private void refresh() {
-    String query = searchField.getText() == null ? "" : searchField.getText().trim().toLowerCase();
-
-    List<ApplicationEntity> visible = new ArrayList<>();
-    for (ApplicationEntity app : currentApps) {
-      if (app.name().toLowerCase().contains(query)) {
-        visible.add(app);
-      }
-    }
+    String query = searchField.getText().trim().toLowerCase();
 
     gamesPane.getChildren().clear();
-    boolean selectionStillVisible = false;
+    boolean selectedVisible = false;
 
-    for (ApplicationEntity app : visible) {
+    for (ApplicationEntity app : currentApps) {
+      if (!app.name().toLowerCase().contains(query)) {
+        continue;
+      }
+
       Node card = createCard(app);
+
       if (selectedApp != null && selectedApp.id().equals(app.id())) {
         card.getStyleClass().add("selected");
-        selectionStillVisible = true;
+        selectedVisible = true;
       }
+
       gamesPane.getChildren().add(card);
     }
 
-    if (!selectionStillVisible) {
+    if (!selectedVisible) {
       selectedApp = null;
     }
-    showDetail(selectedApp);
 
-    emptyLabel.setVisible(visible.isEmpty());
+    showDetail(selectedApp);
+    emptyLabel.setVisible(gamesPane.getChildren().isEmpty());
   }
 
   private Node createCard(ApplicationEntity app) {
     String initial = app.name().isBlank() ? "?" : app.name().substring(0, 1).toUpperCase();
+
     Label letter = new Label(initial);
     letter.getStyleClass().add("cover-letter");
 
-    /// TODO: check whether there is an actual cover
+    // TODO: check whether there is an actual cover or  placeholder is needed
     StackPane cover = new StackPane(letter);
     cover.getStyleClass().add("cover-placeholder");
     cover.setPrefSize(150, 200);
@@ -126,13 +125,15 @@ public class MainController {
     VBox card = new VBox(8, cover, name, played);
     card.getStyleClass().add("game-card");
     card.setPrefWidth(174);
+
     card.setOnMouseClicked(
         e -> {
           selectedApp = app;
-          gamesPane.getChildren().forEach(n -> n.getStyleClass().remove("selected"));
+          gamesPane.getChildren().forEach(node -> node.getStyleClass().remove("selected"));
           card.getStyleClass().add("selected");
           showDetail(app);
         });
+
     return card;
   }
 
@@ -145,12 +146,12 @@ public class MainController {
     }
     detailName.setText(app.name());
     detailPlayed.setText(formatPlayed(app.playedMinutes()));
-    detailAdded.setText(
-        resources.getString("main.added")
-            + " "
-            + DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-                .withLocale(resources.getLocale())
-                .format(app.addedAt()));
+    String addedDate =
+        DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+            .withLocale(resources.getLocale())
+            .format(app.addedAt());
+
+    detailAdded.setText(resources.getString("main.added") + " " + addedDate);
   }
 
   private String formatPlayed(int minutes) {
@@ -166,8 +167,12 @@ public class MainController {
 
   @FXML
   private void onAddGame() {
-    // TODO: game loading window
-    System.out.println("Add game clicked");
+    appContext.showAddApplication(() -> loadApplications());
+  }
+
+  @FXML
+  private void onShowProfile() {
+    appContext.showProfile();
   }
 
   @FXML
@@ -179,5 +184,12 @@ public class MainController {
   @FXML
   private void onLogout() {
     appContext.logout();
+  }
+
+  @FXML
+  private void onCloseDetail() {
+    selectedApp = null;
+    gamesPane.getChildren().forEach(n -> n.getStyleClass().remove("selected"));
+    showDetail(null);
   }
 }

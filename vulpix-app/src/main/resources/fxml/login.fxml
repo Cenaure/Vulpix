@@ -3,8 +3,8 @@
 <?import javafx.scene.layout.*?>
 
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="sk.upjs.ics.application.controllers.LoginController" prefWidth="420" prefHeight="480">
-    <VBox styleClass="auth-card" spacing="12" maxWidth="340" alignment="CENTER_LEFT">
+           fx:controller="sk.upjs.ics.controllers.LoginController" prefWidth="1100" prefHeight="700">
+    <VBox styleClass="auth-card" spacing="12" maxWidth="340" maxHeight="500" alignment="CENTER_LEFT">
         <Label text="%app.name" styleClass="title"/>
         <Label text="%login.subtitle" styleClass="muted"/>
 
