@@ -1,4 +1,4 @@
-package sk.upjs.ics.application.memoryDaos;
+package sk.upjs.ics.memoryDaos;
 
 import java.util.Comparator;
 import java.util.HashMap;

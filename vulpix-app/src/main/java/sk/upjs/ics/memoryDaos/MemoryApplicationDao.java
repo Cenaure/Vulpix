@@ -1,4 +1,4 @@
-package sk.upjs.ics.application.memoryDaos;
+package sk.upjs.ics.memoryDaos;
 
 import java.time.OffsetDateTime;
 import java.util.Comparator;
@@ -62,7 +62,7 @@ public class MemoryApplicationDao implements ApplicationDao {
 
   private void seedIfNeeded(UUID userId) {
     if (!seededUsers.add(userId)) {
-      return; // tohto používateľa sme už naplnili
+      return;
     }
     for (int i = 0; i < DEMO_NAMES.length; i++) {
       save(

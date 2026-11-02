@@ -44,5 +44,5 @@ public class MockAuthService implements AuthService {
   }
 
   @Override
-  public void logout(String refreshToken) {}
+  public void logout(String accessToken) {}
 }

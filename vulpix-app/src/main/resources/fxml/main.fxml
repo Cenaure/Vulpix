@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sk.upjs.ics.application.controllers.MainController" prefWidth="1100" prefHeight="700">
+            fx:controller="sk.upjs.ics.controllers.MainController" prefWidth="1100" prefHeight="700">
 
     <left>
         <VBox styleClass="sidebar" prefWidth="220" spacing="8">
@@ -12,7 +12,6 @@
             <Label text="%main.collections" styleClass="muted"/>
             <ListView fx:id="collectionsList" VBox.vgrow="ALWAYS"/>
             <Separator/>
-            <Label fx:id="userLabel"/>
             <Button text="%main.logout" styleClass="secondary" maxWidth="Infinity" onAction="#onLogout"/>
         </VBox>
     </left>
@@ -20,7 +19,20 @@
     <top>
         <HBox styleClass="toolbar" spacing="12" alignment="CENTER_LEFT">
             <TextField fx:id="searchField" promptText="%main.search" HBox.hgrow="ALWAYS"/>
+
             <Button text="%main.addGame" onAction="#onAddGame"/>
+            <Button styleClass="user-chip" onAction="#onShowProfile">
+                <graphic>
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <!--- TODO: substitute label with a way to show avatar/letter if theres none -->
+                        <StackPane styleClass="avatar-small" minWidth="32" minHeight="32"
+                                   prefWidth="32" prefHeight="32">
+                            <Label fx:id="avatarLetter" styleClass="avatar-letter-small"/>
+                        </StackPane>
+                        <Label fx:id="userLabel" styleClass="user-name"/>
+                    </HBox>
+                </graphic>
+            </Button>
         </HBox>
     </top>
 
@@ -36,7 +48,11 @@
     <right>
         <VBox fx:id="detailPane" styleClass="detail-pane" prefWidth="280" spacing="10"
               visible="false" managed="false">
-            <Label fx:id="detailName" styleClass="title" wrapText="true"/>
+            <HBox spacing="8" alignment="TOP_LEFT">
+                <Label fx:id="detailName" styleClass="title" wrapText="true"
+                       HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button text="✕" styleClass="icon-button" onAction="#onCloseDetail"/>
+            </HBox>
             <Label fx:id="detailPlayed" styleClass="muted"/>
             <Label fx:id="detailAdded" styleClass="muted"/>
             <Button fx:id="playButton" text="%main.play" maxWidth="Infinity" onAction="#onPlay"/>

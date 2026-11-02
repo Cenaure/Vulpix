@@ -1,4 +1,4 @@
-package sk.upjs.ics;
+package sk.upjs.ics.util;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -16,9 +16,7 @@ public final class FxmlLoaderHelper {
   public static void open(String fxml, Callback<Class<?>, Object> controllerFactory, Stage stage) {
     try {
       FXMLLoader loader =
-          new FXMLLoader(
-              FxmlLoaderHelper.class.getResource("/fxml/" + fxml),
-              ResourceBundle.getBundle("lang", Locale.getDefault()));
+          new FXMLLoader(FxmlLoaderHelper.class.getResource("/fxml/" + fxml), bundle());
       loader.setControllerFactory(controllerFactory);
 
       Scene scene = new Scene(loader.load());
@@ -31,5 +29,9 @@ public final class FxmlLoaderHelper {
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
+  }
+
+  public static ResourceBundle bundle() {
+    return ResourceBundle.getBundle("lang", Locale.getDefault());
   }
 }

@@ -1,13 +1,13 @@
-package sk.upjs.ics.application.controllers;
+package sk.upjs.ics.controllers;
 
 import java.util.ResourceBundle;
 import javafx.concurrent.Task;
 import javafx.fxml.*;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import sk.upjs.ics.AppContext;
 import sk.upjs.ics.auth.AuthException;
 import sk.upjs.ics.auth.AuthResult;
+import sk.upjs.ics.util.AppContext;
 
 public class LoginController {
   private final AppContext appContext;
