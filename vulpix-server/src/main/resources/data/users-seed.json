@@ -1,0 +1,19 @@
+{
+  "users": [
+    {
+      "email": "e2e-test1@test.test",
+      "username": "e2e-01",
+      "password": "e2e-01-1234"
+    },
+    {
+      "email": "e2e-test2@test.test",
+      "username": "e2e-02",
+      "password": "e2e-02-1234"
+    },
+    {
+      "email": "e2e-test3@test.test",
+      "username": "e2e-03",
+      "password": "e2e-03-1234"
+    }
+  ]
+}

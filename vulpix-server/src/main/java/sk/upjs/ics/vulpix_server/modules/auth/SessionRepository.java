@@ -28,6 +28,18 @@ public class SessionRepository {
               mapToInstant(rs, "expires_at"),
               mapToInstant(rs, "revoked_at"));
 
+  public Optional<Session> findBySessionId(UUID sessionId) {
+    return jdbc.sql(
+            """
+            SELECT id, user_id, device_info, refresh_token_hash, created_at, expires_at, revoked_at
+            FROM sessions
+            WHERE id = :id AND revoked_at IS NULL AND expires_at > now()
+            """)
+        .param("id", sessionId)
+        .query(mapper)
+        .optional();
+  }
+
   public Session create(
       UUID sessionId, UUID userId, String refreshTokenHash, String deviceInfo, Instant expiresAt) {
     return jdbc.sql(

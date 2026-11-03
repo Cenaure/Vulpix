@@ -1,5 +1,6 @@
 package sk.upjs.ics.vulpix_server.common.configurations;
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -20,7 +21,8 @@ public class SecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/auth/sign-up", "/auth/sign-in", "/auth/refresh")
+                auth.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll() // don't require auth in internal exception handling
+                    .requestMatchers("/auth/sign-up", "/auth/sign-in", "/auth/refresh")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

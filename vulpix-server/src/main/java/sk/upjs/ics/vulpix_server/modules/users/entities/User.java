@@ -1,4 +1,4 @@
-package sk.upjs.ics.vulpix_server.modules.users;
+package sk.upjs.ics.vulpix_server.modules.users.entities;
 
 import java.time.Instant;
 import java.util.UUID;

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import sk.upjs.ics.vulpix_server.modules.users.entities.User;
 
 @Repository
 @RequiredArgsConstructor
@@ -114,5 +115,15 @@ public class UserRepository {
         .param("avatar_url", newAvatarUUID)
         .query(mapper)
         .optional();
+  }
+
+  public Integer count() {
+    return jdbc.sql(
+            """
+            SELECT COUNT(*)
+            FROM users
+            """)
+        .query(Integer.class)
+        .single();
   }
 }

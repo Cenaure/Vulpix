@@ -1,5 +1,6 @@
 package sk.upjs.ics.vulpix_server.modules.auth;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -11,16 +12,16 @@ import sk.upjs.ics.vulpix_server.common.exceptions.BadRequestException;
 import sk.upjs.ics.vulpix_server.common.exceptions.ForbiddenException;
 import sk.upjs.ics.vulpix_server.common.exceptions.NotFoundException;
 import sk.upjs.ics.vulpix_server.common.exceptions.UnauthorizedException;
-import sk.upjs.ics.vulpix_server.common.utils.HashingUtils;
+import sk.upjs.ics.vulpix_server.common.utils.PasswordHashing;
 import sk.upjs.ics.vulpix_server.modules.auth.tokens.RefreshTokenClaims;
-import sk.upjs.ics.vulpix_server.modules.users.User;
 import sk.upjs.ics.vulpix_server.modules.users.UserService;
+import sk.upjs.ics.vulpix_server.modules.users.entities.User;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
   private final UserService userService;
-  private final HashingUtils hashingUtils;
+  private final PasswordHashing passwordHashing;
   private final SessionService sessionService;
 
   @Value("${auth.fake-password}")
@@ -29,7 +30,7 @@ public class AuthService {
   public TokenPair signUp(String username, String email, String password, String deviceInfo) {
     User user = this.userService.create(username, email, password, null);
 
-    return this.sessionService.generateAndSaveTokens(user, true, Optional.empty(), deviceInfo);
+    return this.sessionService.createSession(user, deviceInfo, Instant.now());
   }
 
   public TokenPair signIn(String email, String password, String deviceInfo) {
@@ -38,7 +39,7 @@ public class AuthService {
     String hashToCompare =
         existingUser.isPresent() ? existingUser.get().passwordHash() : fakePassword;
 
-    boolean passwordMatches = hashingUtils.matches(hashToCompare, password);
+    boolean passwordMatches = passwordHashing.matches(hashToCompare, password);
 
     if (existingUser.isEmpty() || !passwordMatches)
       throw new BadRequestException(ApiExceptionCodes.WRONG_CREDENTIALS);
@@ -47,11 +48,10 @@ public class AuthService {
 
     this.userService.updateLastLoginDate(unwrappedUser.id());
 
-    return this.sessionService.generateAndSaveTokens(
-        unwrappedUser, true, Optional.empty(), deviceInfo);
+    return this.sessionService.createSession(unwrappedUser, deviceInfo, Instant.now());
   }
 
-  public TokenPair refresh(String refreshToken, String deviceInfo) {
+  public TokenPair refresh(String refreshToken) {
     try {
       RefreshTokenClaims claims = this.sessionService.validateRefreshToken(refreshToken);
 
@@ -59,7 +59,7 @@ public class AuthService {
 
       this.userService.updateLastLoginDate(user.id());
 
-      return this.sessionService.generateAndSaveTokens(user, false, Optional.empty(), deviceInfo);
+      return this.sessionService.updateSessionToken(user, claims.sessionId(), Instant.now());
     } catch (Exception e) {
       throw new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED);
     }
@@ -71,7 +71,7 @@ public class AuthService {
             .findBySessionId(sessionId)
             .orElseThrow(() -> new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED));
 
-    if (session.userId() != userId) throw new ForbiddenException(ApiExceptionCodes.FORBIDDEN);
+    if (!session.userId().equals(userId)) throw new ForbiddenException(ApiExceptionCodes.FORBIDDEN);
 
     return this.sessionService.revokeSession(sessionId);
   }
