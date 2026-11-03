@@ -7,10 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-import sk.upjs.ics.dto.auth.SignInDto;
-import sk.upjs.ics.dto.auth.SignUpDto;
-import sk.upjs.ics.dto.auth.TokenPair;
-import sk.upjs.ics.vulpix_server.modules.users.User;
+import sk.upjs.ics.dto.auth.*;
+import sk.upjs.ics.vulpix_server.modules.users.entities.User;
 
 @RestController
 @RequestMapping("/auth")
@@ -24,6 +22,7 @@ public class AuthController {
   }
 
   @PostMapping("/sign-up")
+  @ResponseStatus(HttpStatus.CREATED)
   public TokenPair signUp(@Valid @RequestBody SignUpDto dto) {
     return this.authService.signUp(dto.username(), dto.email(), dto.password(), dto.deviceInfo());
   }
@@ -43,14 +42,21 @@ public class AuthController {
     this.authService.revokeAllUserSessions(userId);
   }
 
-  //  @PostMapping("/refresh")
-  //  public TokenPair refresh() {
-  //      return "todo";
-  //  }
+  @PostMapping("/refresh")
+  public TokenPair refresh(@Valid @RequestBody RefreshDto dto) {
+    return this.authService.refresh(dto.refreshToken());
+  }
 
   @GetMapping("/me")
-  public User me(@AuthenticationPrincipal Jwt jwt) {
+  public UserProfileDto me(@AuthenticationPrincipal Jwt jwt) {
     UUID userId = UUID.fromString(jwt.getSubject());
-    return this.authService.getMe(userId);
+    User user = this.authService.getMe(userId);
+
+    return new UserProfileDto(
+        user.id(),
+        user.username(),
+        user.email(),
+        user.avatarImg()
+    );
   }
 }

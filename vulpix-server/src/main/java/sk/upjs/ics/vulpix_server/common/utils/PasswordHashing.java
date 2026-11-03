@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 // Component lets Spring inject this class into other classes' constructors
 // This is a singleton
 @Component
-public final class HashingUtils {
+public final class PasswordHashing {
   BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
   public String encode(String string) {
