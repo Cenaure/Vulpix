@@ -1,0 +1,238 @@
+.label {
+    -fx-text-fill: -fg;
+}
+
+.title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.auth-card {
+    -fx-background-color: -surface;
+    -fx-background-radius: 2;
+    -fx-padding: 28;
+}
+
+.hyperlink {
+    -fx-text-fill: -accent;
+    -fx-border-color: transparent;
+    -fx-padding: 4 0;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: -accent-hover;
+    -fx-underline: true;
+}
+
+.hyperlink:visited {
+    -fx-text-fill: -accent;
+}
+
+.hyperlink:focused {
+    -fx-border-color: transparent;
+}
+
+.progress-indicator {
+    -fx-progress-color: -accent;
+}
+
+.check-box {
+    -fx-text-fill: -fg;
+}
+
+.check-box .box {
+    -fx-background-color: -bg;
+    -fx-background-insets: 0;
+    -fx-background-radius: 4;
+    -fx-border-color: -border;
+    -fx-border-radius: 4;
+}
+
+.check-box:selected .box {
+    -fx-background-color: -accent;
+    -fx-border-color: -accent;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+.toolbar {
+    -fx-padding: 12 16;
+    -fx-background-color: -surface;
+    -fx-border-color: -border;
+    -fx-border-width: 0 0 1 0;
+}
+
+.sidebar {
+    -fx-background-color: -surface;
+    -fx-padding: 12;
+    -fx-spacing: 8;
+    /*-fx-border-color: -border;*/
+    /*-fx-border-width: 0 1 0 0;*/
+}
+
+.detail-pane {
+    -fx-background-color: -surface;
+    -fx-padding: 16;
+    -fx-border-color: -border;
+    -fx-border-width: 0 0 0 1;
+}
+
+.games-pane {
+    -fx-padding: 16;
+}
+
+.game-card {
+    -fx-background-color: -surface;
+    -fx-background-radius: 6;
+    /*-fx-border-color: -border;*/
+    -fx-border-radius: 6;
+    /*-fx-padding: 12;*/
+    -fx-cursor: hand;
+}
+
+.game-card:hover {
+    /*-fx-border-color: -accent;*/
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 12, 0, 0, 2);
+}
+
+/*.game-card.selected {*/
+/*    -fx-border-color: -accent;*/
+/*    -fx-border-width: 2;*/
+/*}*/
+
+.cover-placeholder {
+    -fx-background-color: linear-gradient(to bottom right, -accent, -surface-hover);
+    -fx-background-radius: 6;
+}
+
+.cover-letter {
+    -fx-font-size: 56px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.list-view,
+.table-view,
+.tree-view {
+    -fx-background-color: -surface;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-control-inner-background: -surface;
+    -fx-control-inner-background-alt: -surface;
+    -fx-padding: 1;
+}
+
+.list-cell,
+.tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fg;
+    -fx-padding: 8 10;
+}
+
+.list-cell:filled:hover,
+.tree-cell:filled:hover {
+    -fx-background-color: -surface-hover;
+}
+
+.list-cell:filled:selected,
+.tree-cell:filled:selected {
+    -fx-background-color: -accent;
+    -fx-text-fill: white;
+}
+
+.scroll-pane,
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: -border;
+    -fx-background-radius: 6;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: -fg-muted;
+}
+
+.scroll-bar > .increment-button,
+.scroll-bar > .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar > .increment-button > .increment-arrow,
+.scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-padding: 0;
+    -fx-shape: " ";
+}
+
+.separator:horizontal .line {
+    -fx-border-color: -border transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+    -fx-background-color: transparent;
+}
+
+.dialog-root {
+    -fx-background-color: -bg;
+    -fx-padding: 24;
+}
+
+/* avaatar */
+
+.avatar,
+.avatar-small {
+    -fx-background-color: linear-gradient(to bottom right, -accent, -accent-press);
+}
+
+.avatar {
+    -fx-background-radius: 36;
+}
+
+.avatar-small {
+    -fx-background-radius: 16;
+}
+
+.avatar-letter,
+.avatar-letter-small {
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.avatar-letter {
+    -fx-font-size: 32px;
+}
+
+.avatar-letter-small {
+    -fx-font-size: 15px;
+}
+
+/*profile */
+
+.stat-box {
+    -fx-background-color: -surface;
+    -fx-background-radius: 12;
+    -fx-border-color: -border;
+    -fx-border-radius: 12;
+    -fx-padding: 12 16;
+    -fx-spacing: 2;
+}
+
+.stat-value {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}

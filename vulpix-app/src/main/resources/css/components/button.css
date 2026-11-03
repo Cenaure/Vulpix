@@ -1,0 +1,54 @@
+.button {
+    -fx-background-color: -accent;
+    /* margin top - 20 */
+    -fx-background-insets: 20 0 0 0;
+    -fx-border-insets: 20 0 0 0;
+    -fx-padding: 30 16 10 16;
+
+    -fx-background-radius: 2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold; /*TODO doesn't work */
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: derive(-accent, -20%);
+}
+
+.button:pressed {
+    -fx-background-color: -accent-press;
+}
+
+.button:disabled {
+    -fx-opacity: 0.5;
+}
+
+.button.secondary {
+    -fx-background-color: -surface-hover;
+    -fx-text-fill: -fg;
+    -fx-font-weight: normal;
+}
+
+.button.secondary:hover {
+    -fx-background-color: -border;
+}
+
+.button.secondary:pressed {
+    -fx-background-color: -border;
+    -fx-opacity: 0.8;
+}
+
+.button.user-chip {
+    -fx-background-color: transparent;
+    -fx-background-radius: 20;
+    -fx-padding: 4 12 4 4;
+    -fx-font-weight: normal;
+}
+
+.button.user-chip:hover {
+    -fx-background-color: -surface-hover;
+}
+
+.button.user-chip:pressed {
+    -fx-background-color: -border;
+}

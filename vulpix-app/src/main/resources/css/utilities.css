@@ -1,0 +1,12 @@
+.muted {
+    -fx-text-fill: -fg-muted;
+}
+
+.error {
+    -fx-text-fill: -danger;
+}
+
+/*font-bold font-semibold*/
+.user-name {
+    -fx-font-weight: bold;
+}

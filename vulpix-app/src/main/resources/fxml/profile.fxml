@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="sk.upjs.ics.controllers.ProfileController"
+      fx:controller="sk.upjs.ics.profile.ui.ProfileController"
       styleClass="dialog-root" spacing="16" prefWidth="520">
 
     <HBox spacing="16" alignment="CENTER_LEFT">

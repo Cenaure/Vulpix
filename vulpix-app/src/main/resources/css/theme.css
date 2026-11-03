@@ -1,0 +1,31 @@
+/* Global variables and styles */
+
+.root {
+    -bg: #1b1716;
+    -surface: #231d1d;
+    -surface-hover: #282321;
+    -border: #6e5b58;
+    -fg: #edeae8;
+    -fg-muted: #ab9d9a;
+    -accent: #e77777;
+    -accent-hover: #c2586b;
+    -accent-press: #e37d89;
+    -danger: #f64747;
+
+    -fx-background-color: -bg;
+    -fx-font-family: "Segoe UI", "Noto Sans", "DejaVu Sans";
+    -fx-font-size: 14px;
+}
+
+.root.light {
+    -bg: #f4f5f7;
+    -surface: #ffffff;
+    -surface-hover: #eceef2;
+    -border: #d5d8df;
+    -fg: #1b1d22;
+    -fg-muted: #6a707c;
+    -accent: #6a49f0;
+    -accent-hover: #7d5ef5;
+    -accent-press: #5636d6;
+    -danger: #d63b3b;
+}

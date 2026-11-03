@@ -1,11 +1,11 @@
 package sk.upjs.ics;
 
-import sk.upjs.ics.daos.ApplicationDao;
-import sk.upjs.ics.daos.ApplicationSpecificationsDao;
-import sk.upjs.ics.daos.CollectionDao;
-import sk.upjs.ics.memoryDaos.MemoryApplicationDao;
-import sk.upjs.ics.memoryDaos.MemoryApplicationSpecificationsDao;
-import sk.upjs.ics.memoryDaos.MemoryCollectionDao;
+import sk.upjs.ics.collection.dao.CollectionDao;
+import sk.upjs.ics.collection.dao.InMemoryCollectionDao;
+import sk.upjs.ics.library.dao.ApplicationDao;
+import sk.upjs.ics.library.dao.ApplicationSpecificationsDao;
+import sk.upjs.ics.library.dao.InMemoryApplicationDao;
+import sk.upjs.ics.library.dao.InMemoryApplicationSpecificationsDao;
 
 public enum daoFactory {
   INSTANCE;
@@ -16,21 +16,21 @@ public enum daoFactory {
 
   public ApplicationDao applicationDao() {
     if (applicationDao == null) {
-      applicationDao = new MemoryApplicationDao();
+      applicationDao = new InMemoryApplicationDao();
     }
     return applicationDao;
   }
 
   public CollectionDao collectionDao() {
     if (collectionDao == null) {
-      collectionDao = new MemoryCollectionDao(applicationDao());
+      collectionDao = new InMemoryCollectionDao(applicationDao());
     }
     return collectionDao;
   }
 
   public ApplicationSpecificationsDao applicationSpecificationsDao() {
     if (applicationSpecificationsDao == null) {
-      applicationSpecificationsDao = new MemoryApplicationSpecificationsDao();
+      applicationSpecificationsDao = new InMemoryApplicationSpecificationsDao();
     }
     return applicationSpecificationsDao;
   }

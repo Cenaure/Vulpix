@@ -3,18 +3,18 @@
 <?import javafx.scene.layout.*?>
 
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="sk.upjs.ics.controllers.LoginController" prefWidth="1100" prefHeight="700">
+           fx:controller="sk.upjs.ics.auth.ui.LoginController" prefWidth="1100" prefHeight="700">
     <VBox styleClass="auth-card" spacing="12" maxWidth="340" maxHeight="500" alignment="CENTER_LEFT">
         <Label text="%app.name" styleClass="title"/>
         <Label text="%login.subtitle" styleClass="muted"/>
 
-        <TextField fx:id="usernameField" promptText="%login.username" visible="false" managed="false"/>
-        <TextField fx:id="emailField" promptText="%login.email"/>
-        <PasswordField fx:id="passwordField" promptText="%login.password" onAction="#onSubmit"/>
+        <TextField styleClass="field" fx:id="usernameField" promptText="%login.username" visible="false" managed="false"/>
+        <TextField styleClass="field" fx:id="emailField" promptText="%login.email"/>
+        <PasswordField styleClass="field" fx:id="passwordField" promptText="%login.password" onAction="#onSubmit"/>
 
         <Label fx:id="errorLabel" styleClass="error" wrapText="true" visible="false" managed="false"/>
 
-        <Button fx:id="submitButton" text="%login.submit" maxWidth="Infinity"
+        <Button styleClass="mt-4" fx:id="submitButton" text="%login.submit" maxWidth="Infinity"
                 defaultButton="true" onAction="#onSubmit"/>
         <ProgressIndicator fx:id="progress" visible="false" managed="false" maxWidth="24" maxHeight="24"/>
 

@@ -1,0 +1,16 @@
+.field {
+    -fx-background-color: -bg;
+    -fx-background-insets: 0;
+    -fx-background-radius: 2;
+    -fx-border-color: derive(-border, -40%);
+    -fx-border-radius: 2;
+    -fx-padding: 9 12;
+    -fx-text-fill: -fg;
+    -fx-prompt-text-fill: -fg-muted;
+    -fx-highlight-fill: -accent;
+    -fx-highlight-text-fill: white;
+}
+
+.field:focused {
+    -fx-border-color: -accent;
+}

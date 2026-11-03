@@ -2,10 +2,10 @@ package sk.upjs.ics;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import sk.upjs.ics.daos.ApplicationDao;
-import sk.upjs.ics.daos.ApplicationSpecificationsDao;
-import sk.upjs.ics.daos.CollectionDao;
-import sk.upjs.ics.memoryDaos.MemoryApplicationDao;
+import sk.upjs.ics.collection.dao.CollectionDao;
+import sk.upjs.ics.library.dao.ApplicationDao;
+import sk.upjs.ics.library.dao.ApplicationSpecificationsDao;
+import sk.upjs.ics.library.dao.InMemoryApplicationDao;
 import sk.upjs.ics.util.AppContext;
 
 public class Main extends Application {
@@ -26,7 +26,7 @@ public class Main extends Application {
   @Override
   public void start(Stage primaryStage) throws Exception {
     primaryStage.setTitle("Vulpix");
-    var appDao = new MemoryApplicationDao();
+    var appDao = new InMemoryApplicationDao();
 
     ApplicationDao applicationDao = daoFactory.INSTANCE.applicationDao();
     CollectionDao collectionDao = daoFactory.INSTANCE.collectionDao();

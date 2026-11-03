@@ -4,16 +4,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import lombok.Setter;
+import sk.upjs.ics._common.ui.FxmlLoaderHelper;
 import sk.upjs.ics.auth.AuthResult;
 import sk.upjs.ics.auth.AuthService;
-import sk.upjs.ics.controllers.AddApplicationController;
-import sk.upjs.ics.controllers.LoginController;
-import sk.upjs.ics.controllers.MainController;
-import sk.upjs.ics.controllers.ProfileController;
-import sk.upjs.ics.daos.ApplicationDao;
-import sk.upjs.ics.daos.ApplicationSpecificationsDao;
-import sk.upjs.ics.daos.CollectionDao;
+import sk.upjs.ics.auth.ui.LoginController;
+import sk.upjs.ics.collection.dao.CollectionDao;
 import sk.upjs.ics.entities.UserEntity;
+import sk.upjs.ics.library.dao.ApplicationDao;
+import sk.upjs.ics.library.dao.ApplicationSpecificationsDao;
+import sk.upjs.ics.library.ui.AddApplicationController;
+import sk.upjs.ics.library.ui.LibraryController;
+import sk.upjs.ics.profile.ui.ProfileController;
 
 public class AppContext {
   private final Stage stage;
@@ -74,7 +75,7 @@ public class AppContext {
   }
 
   public void showMain() {
-    FxmlLoaderHelper.open("main.fxml", type -> new MainController(this), stage);
+    FxmlLoaderHelper.open("main.fxml", type -> new LibraryController(this), stage);
   }
 
   public void showProfile() {
@@ -83,7 +84,7 @@ public class AppContext {
 
   public void showAddApplication(Runnable onSaved) {
     openDialog(
-        "addApplication.fxml", "add.title", type -> new AddApplicationController(this, onSaved));
+        "add-application.fxml", "add.title", type -> new AddApplicationController(this, onSaved));
   }
 
   private void openDialog(String fxml, String titleKey, Callback<Class<?>, Object> factory) {
