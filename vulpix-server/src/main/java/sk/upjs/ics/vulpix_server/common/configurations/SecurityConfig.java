@@ -21,7 +21,8 @@ public class SecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth ->
-                auth.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll() // don't require auth in internal exception handling
+                auth.dispatcherTypeMatchers(DispatcherType.ERROR)
+                    .permitAll() // don't require auth in internal exception handling
                     .requestMatchers("/auth/sign-up", "/auth/sign-in", "/auth/refresh")
                     .permitAll()
                     .anyRequest()

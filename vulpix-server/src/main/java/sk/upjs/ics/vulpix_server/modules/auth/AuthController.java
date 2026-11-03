@@ -52,11 +52,6 @@ public class AuthController {
     UUID userId = UUID.fromString(jwt.getSubject());
     User user = this.authService.getMe(userId);
 
-    return new UserProfileDto(
-        user.id(),
-        user.username(),
-        user.email(),
-        user.avatarImg()
-    );
+    return new UserProfileDto(user.id(), user.username(), user.email(), user.avatarImg());
   }
 }

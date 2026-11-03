@@ -84,9 +84,10 @@ public class SessionService {
             .build()
             .parseSignedClaims(refreshToken);
 
-    RefreshTokenClaims claims = new RefreshTokenClaims(
-        UUID.fromString(res.getPayload().getSubject()),
-        UUID.fromString((String) res.getPayload().get("sessionId")));
+    RefreshTokenClaims claims =
+        new RefreshTokenClaims(
+            UUID.fromString(res.getPayload().getSubject()),
+            UUID.fromString((String) res.getPayload().get("sessionId")));
 
     // Checks whether the session exists and is not revoked
     String refreshTokenHash = this.sha256(refreshToken);
