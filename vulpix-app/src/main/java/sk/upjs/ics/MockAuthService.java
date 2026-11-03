@@ -27,7 +27,7 @@ public class MockAuthService implements AuthService {
       throw new AuthException(AuthErrorCode.INVALID_CREDENTIALS);
     }
     var result = new AuthResult(user, UUID.randomUUID().toString(), UUID.randomUUID().toString());
-    ;
+
     return result;
   }
 
