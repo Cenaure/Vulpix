@@ -133,12 +133,6 @@ CREATE UNIQUE INDEX IF NOT EXISTS unique_friendship ON friendships
 CREATE TABLE IF NOT EXISTS chats
 (
     id              UUID PRIMARY KEY     DEFAULT uuidv7(),
-    user_id_from    UUID        NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    user_id_to      UUID        NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-
-    unread_messages INT         NOT NULL DEFAULT 0,
-    CONSTRAINT c_positive_unread_messages CHECK ( unread_messages >= 0 ),
-
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
