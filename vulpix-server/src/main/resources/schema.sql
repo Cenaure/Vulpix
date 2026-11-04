@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users
     CONSTRAINT u_email_l CHECK (char_length(email) <= 254),
 
     password_hash  TEXT,                 -- I guess it can be null if we will have Google oauth
+    CONSTRAINT u_password_l CHECK (char_length(password_hash) = 60),
 
     avatar_img     UUID,                 -- file name
 
