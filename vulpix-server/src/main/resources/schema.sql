@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users
     email          TEXT        NOT NULL, -- not unique because must be unique only for not deactivated accounts
     CONSTRAINT u_email_l CHECK (char_length(email) <= 254),
 
-    password_hash  TEXT,                 -- I guess it can be null if we will have Google oauth
+    password_hash  TEXT        NOT NULL,
     CONSTRAINT u_password_l CHECK (char_length(password_hash) = 60),
 
     avatar_img     UUID,                 -- file name
@@ -55,30 +55,16 @@ CREATE TABLE IF NOT EXISTS applications
     played_seconds BIGINT      NOT NULL DEFAULT 0,
     CONSTRAINT a_played_seconds_rule CHECK (played_seconds >= 0),
 
+    background_img UUID,
+    logo_img       UUID,
+    icon_img       UUID,
+    cover_img      UUID,
+
+    is_private     BOOLEAN     NOT NULL DEFAULT FALSE,
+
     added_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS index_applications_user_id ON applications (user_id);
-
-
-CREATE TABLE IF NOT EXISTS application_specifications
-(
-    application_id   UUID PRIMARY KEY REFERENCES applications (id) ON DELETE CASCADE,
-
-    background_img   UUID,
-    logo_img         UUID,
-    icon_img         UUID,
-    cover_img        UUID,
-
-    -- don't show it for other users
-    is_private       BOOLEAN NOT NULL DEFAULT FALSE,
-
-    -- we must check if executable exists on this path when the app or game are launched
-    -- if not mark the specification as outdated and ask user to update the path.
-    application_path TEXT,
-    proton_version   TEXT,
-    wine_prefix      TEXT,
-    launch_options   TEXT
-);
 
 
 CREATE TABLE IF NOT EXISTS collections
@@ -89,7 +75,8 @@ CREATE TABLE IF NOT EXISTS collections
 );
 CREATE INDEX IF NOT EXISTS index_collections_user_id ON collections (user_id);
 
-
+-- now user can add to their collection an application of another user
+-- server must check consistency
 CREATE TABLE IF NOT EXISTS collection_applications
 (
     collection_id  UUID NOT NULL REFERENCES collections (id) ON DELETE CASCADE,
@@ -102,14 +89,15 @@ CREATE TABLE IF NOT EXISTS collection_applications
 CREATE TABLE IF NOT EXISTS play_sessions
 (
     id             UUID PRIMARY KEY     DEFAULT uuidv7(),
-    user_id        UUID        NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+    -- Application already have user_id
+    -- user_id        UUID        NOT NULL REFERENCES users (id) ON DELETE CASCADE,
     application_id UUID        NOT NULL REFERENCES applications (id) ON DELETE CASCADE,
     started_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
     finished_at    TIMESTAMPTZ,
     CONSTRAINT ps_finished_at_rule CHECK ( finished_at IS NULL OR finished_at >= started_at )
 );
-CREATE UNIQUE INDEX IF NOT EXISTS unique_play_session_user_id
-    ON play_sessions (user_id)
+CREATE UNIQUE INDEX IF NOT EXISTS unique_play_session_application_id
+    ON play_sessions (application_id)
     WHERE finished_at IS NULL;
 
 CREATE TABLE IF NOT EXISTS friendships
@@ -132,25 +120,39 @@ CREATE UNIQUE INDEX IF NOT EXISTS unique_friendship ON friendships
 
 CREATE TABLE IF NOT EXISTS chats
 (
-    id              UUID PRIMARY KEY     DEFAULT uuidv7(),
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    id                  UUID PRIMARY KEY     DEFAULT uuidv7(),
+
+    user_a_id           UUID        NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
+    user_b_id           UUID        NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
+    CONSTRAINT c_different_users CHECK (user_a_id <> user_b_id),
+
+    user_a_last_read_at TIMESTAMPTZ,
+    user_b_last_read_at TIMESTAMPTZ,
+
+    created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS chat_members
-(
-    user_id      UUID REFERENCES users (id) ON DELETE CASCADE,
-    chat_id      UUID REFERENCES chats (id) ON DELETE CASCADE,
-    last_read_at TIMESTAMPTZ NOT NULL
-);
+CREATE INDEX IF NOT EXISTS unique_users_pairs
+    ON chats (
+              least(user_a_id, user_b_id),
+              greatest(user_a_id, user_b_id)
+        );
+
+CREATE INDEX IF NOT EXISTS chat_user_a_index
+    ON chats (user_a_id);
+CREATE INDEX IF NOT EXISTS chat_user_a_index
+    ON chats (user_b_id);
 
 CREATE TABLE IF NOT EXISTS messages
 (
     id        UUID PRIMARY KEY     DEFAULT uuidv7(),
     chat_id   UUID        NOT NULL REFERENCES chats (id) ON DELETE CASCADE,
-    author_id UUID        NOT NULL REFERENCES users (id),
+    author_id UUID        NOT NULL REFERENCES users (id) ON DELETE RESTRICT,
 
     content   TEXT        NOT NULL
         CONSTRAINT m_content_l CHECK ( char_length(content) <= 1000 ),
 
     sent_at   TIMESTAMPTZ NOT NULL DEFAULT now()
-)
+);
+
+CREATE INDEX IF NOT EXISTS message_chat_id_index ON messages (chat_id)

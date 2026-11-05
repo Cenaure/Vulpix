@@ -1,6 +1,8 @@
 package sk.upjs.ics.vulpix_server.modules.auth;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,5 +55,19 @@ public class AuthController {
     User user = this.authService.getMe(userId);
 
     return new UserProfileDto(user.id(), user.username(), user.email(), user.avatarImg());
+  }
+
+  @GetMapping("/my-sessions")
+  public GetUserSessionsDto mySessions(
+      @AuthenticationPrincipal Jwt jwt
+  ) {
+    UUID userId = UUID.fromString(jwt.getSubject());
+    List<Session> sessions = this.authService.getUserSessions(userId);
+
+    return new GetUserSessionsDto(
+        sessions.stream()
+            .map(Session::toSessionDto)
+            .toList()
+    );
   }
 }

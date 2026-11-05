@@ -8,13 +8,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.HexFormat;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import sk.upjs.ics.dto.auth.GetUserSessionsDto;
 import sk.upjs.ics.dto.auth.TokenPair;
 import sk.upjs.ics.exceptions.ApiExceptionCodes;
 import sk.upjs.ics.vulpix_server.common.exceptions.UnauthorizedException;
@@ -145,6 +143,11 @@ public class SessionService {
 
   public Optional<Session> findBySessionId(UUID sessionId) {
     return this.sessionRepository.findBySessionId(sessionId);
+  }
+
+
+  public List<Session> findUserSessions(UUID userId) {
+    return this.sessionRepository.findByUserId(userId);
   }
 
   public Session revokeSession(UUID id) {

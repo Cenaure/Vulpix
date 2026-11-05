@@ -1,5 +1,7 @@
 package sk.upjs.ics.vulpix_server.modules.auth;
 
+import sk.upjs.ics.dto.auth.SessionDto;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -11,7 +13,7 @@ public record Session(
     Instant createdAt,
     Instant expiresAt,
     Instant revokedAt) {
-  public boolean isActive() {
-    return expiresAt.isAfter(Instant.now()) && revokedAt == null;
+  public SessionDto toSessionDto() {
+    return new SessionDto(this.id(), this.userId(), this.deviceInfo(), this.createdAt());
   }
 }

@@ -1,11 +1,13 @@
 package sk.upjs.ics.vulpix_server.modules.auth;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import sk.upjs.ics.dto.auth.GetUserSessionsDto;
 import sk.upjs.ics.dto.auth.TokenPair;
 import sk.upjs.ics.exceptions.ApiExceptionCodes;
 import sk.upjs.ics.vulpix_server.common.exceptions.BadRequestException;
@@ -86,5 +88,9 @@ public class AuthService {
     } catch (NotFoundException e) {
       throw new UnauthorizedException(ApiExceptionCodes.UNAUTHORIZED);
     }
+  }
+
+  public List<Session> getUserSessions(UUID userId) {
+    return this.sessionService.findUserSessions(userId);
   }
 }
